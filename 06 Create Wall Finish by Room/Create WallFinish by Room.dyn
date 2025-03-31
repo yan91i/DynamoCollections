@@ -1,0 +1,396 @@
+{
+  "Uuid": "0bcecbc7-2508-4415-a64e-e82120e5e00b",
+  "IsCustomNode": false,
+  "Description": null,
+  "Name": "Create WallFinish by Room",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "NodeType": "PythonScriptNode",
+      "Code": "input = IN[0]\r\nif input!=0:\r\n\timport sys\r\n\timport clr\r\n\timport os\r\n\t\r\n\tfrom System import Array\r\n\tfrom System.Collections.Generic import *\r\n\t\r\n\tfrom operator import attrgetter\r\n\t\r\n\tclr.AddReference('ProtoGeometry')\r\n\tfrom Autodesk.DesignScript.Geometry import *\r\n\t\r\n\tclr.AddReference('RevitAPI')\r\n\timport Autodesk\r\n\tfrom Autodesk.Revit.DB import *\r\n\t\r\n\tclr.AddReference(\"RevitAPIUI\")\r\n\timport Autodesk \r\n\tfrom Autodesk.Revit.UI import TaskDialog, IExternalEventHandler, ExternalEvent\r\n\tfrom Autodesk.Revit.UI.Selection import *\r\n\t\r\n\tclr.AddReference(\"RevitServices\")\r\n\timport RevitServices\r\n\tfrom RevitServices.Persistence import DocumentManager\r\n\tfrom RevitServices.Transactions import TransactionManager\r\n\t\r\n\tclr.AddReference('RevitAPIIFC')\r\n\tfrom Autodesk.Revit.DB.IFC import *\r\n\t\r\n\tclr.AddReference('System.Drawing')\r\n\tclr.AddReference('System.Windows.Forms')\r\n\timport System.Drawing\r\n\timport System.Windows.Forms\r\n\tfrom System.Drawing import *\r\n\tfrom System.Reflection import Assembly\r\n\tfrom System.Windows.Forms import *\r\n\t\r\n\tdef unitConverterToInternal(value, units):\r\n\t\tif value != 0:\r\n\t\t\t_inchToMm = float(25.4)\r\n\t\t\t_footToMm = float(12) * _inchToMm\r\n\t\t\tif units ==\"in MM\":\r\n\t\t\t\treturn float(value)/_footToMm\r\n\t\t\telif units ==\"in M\":\r\n\t\t\t\treturn float(value)*1000/_footToMm\r\n\t\t\telif units ==\"in FT\":\r\n\t\t\t\treturn float(value)\r\n\t\t\telif units ==\"in INCH\":\r\n\t\t\t\treturn (float(value)*_inchToMm)/_footToMm\r\n\t\telse:\r\n\t\t\treturn 0\r\n\t\t\t\r\n\tclass FormWithProgresBar(Form):\r\n\t\tdef __init__(self):\r\n\t\t\tself.Font = Font(\"Arial\", 15, FontStyle.Regular, GraphicsUnit.Pixel)\r\n\t\t\tself.interrupt = False\r\n\t\t\tself.numberItems = 5\r\n\t\t\tself.TopMost = True\r\n\t\t\tself.Closing += self.closingevent\r\n\t\t\tself.InitializeComponent()\r\n\t\tdef InitializeComponent(self):\r\n\t\t\tself._progressBar = System.Windows.Forms.ProgressBar()\r\n\t\t\tself._button1 = System.Windows.Forms.Button()\r\n\t\t\tself._txtBlock2 = System.Windows.Forms.Label()\r\n\t\t\tself.SuspendLayout()\r\n\t\t\t# \r\n\t\t\t# TextBlock2\r\n\t\t\t# \r\n\t\t\tself._txtBlock2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left\r\n\t\t\tself._txtBlock2.TextAlign = ContentAlignment.MiddleCenter\r\n\t\t\tself._txtBlock2.Location = System.Drawing.Point(0, 5)\r\n\t\t\tself._txtBlock2.Name = \"txtBlock2\"\r\n\t\t\tself._txtBlock2.Size = System.Drawing.Size(250, 20)\r\n\t\t\tself._txtBlock2.TabIndex = 1\r\n\t\t\tself._txtBlock2.Text = \"0 / 0 Rooms Processed\"\r\n\t\t\t# \r\n\t\t\t# ProgressBar\r\n\t\t\t# \r\n\t\t\tself._progressBar.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left\r\n\t\t\tself._progressBar.Location = System.Drawing.Point(15, 30)\r\n\t\t\tself._progressBar.Name = \"progressBar\"\r\n\t\t\tself._progressBar.Size = System.Drawing.Size(220, 15)\r\n\t\t\tself._progressBar.Value = 0\r\n\t\t\tself._progressBar.TabIndex = 1\r\n\t\t\t# \r\n\t\t\t# button1\r\n\t\t\t# \r\n\t\t\tself._button1.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right\r\n\t\t\tself._button1.Location = System.Drawing.Point(14, 50)\r\n\t\t\tself._button1.Name = \"button1\"\r\n\t\t\tself._button1.Size = System.Drawing.Size(222, 20)\r\n\t\t\tself._button1.TabIndex = 2\r\n\t\t\tself._button1.Text = \"Interrupt / Cancel\"\r\n\t\t\tself._button1.UseVisualStyleBackColor = True\r\n\t\t\tself._button1.Click += self.Button1Click\r\n\t\t\t# \r\n\t\t\t# Form24\r\n\t\t\t# \r\n\t\t\tself.ClientSize = System.Drawing.Size(250, 85)\r\n\t\t\tself.MaximizeBox = 0\r\n\t\t\tself.MinimizeBox = 0\r\n\t\t\tself.CenterToScreen() \r\n\t\t\tself.FormBorderStyle = FormBorderStyle.FixedSingle\r\n\t\t\tself.Controls.Add(self._txtBlock2)\r\n\t\t\tself.Controls.Add(self._button1)\r\n\t\t\tself.Controls.Add(self._progressBar)\r\n\t\t\tself.Name = \"Creating Wall Finishes...\"\r\n\t\t\tself.Text = \"Creating Wall Finishes...\"\r\n\t\t\ticonFilename = 'C:\\\\NONICAPRO\\\\OtherFiles\\\\System\\\\Nonicafavicon.ICO'\r\n\t\t\tif not os.path.exists(iconFilename):\r\n\t\t\t\ticonFilename = 'C:\\\\NONICA\\\\OtherFiles\\\\System\\\\Nonicafavicon.ICO'\r\n\t\t\ticon = Icon(iconFilename)\r\n\t\t\tself.Icon = icon\r\n\t\t\tself.ResumeLayout(False)\r\n\t\tdef Button1Click(self, sender, e):\r\n\t\t\tself.interrupt = True\r\n\t\tdef closingevent(self, sender, e):\r\n\t\t\tself.interrupt = True\r\n\t\t\t\r\n\tclass RoomSelectionFilter(ISelectionFilter):        \r\n\t\tdef AllowElement(self, element):\r\n\t\t\tif element.Category.Id.IntegerValue==int(BuiltInCategory.OST_Rooms):\r\n\t\t\t\treturn True\r\n\t\t\telse:\r\n\t\t\t\treturn False\r\n\t\r\n\t\tdef AllowReference(self, refer, point):\r\n\t\t\treturn False\r\n\t\r\n\tdef pickobject():\r\n\t\troomFilter = RoomSelectionFilter()\r\n\t\tpicked = uidoc.Selection.PickObjects(ObjectType.Element, roomFilter)\r\n\t\treturn picked\r\n\t\t\t\t\r\n\tdef isclose(a, b, abs_tol=0.0, rel_tol=1e-09):\r\n\t\treturn abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)\r\n\t\t\r\n\tdef compareXYZ(firstpoint, secondpoint):\r\n\t\tif isclose(firstpoint.X, secondpoint.X) and isclose(firstpoint.Y, secondpoint.Y) and isclose(firstpoint.Z, secondpoint.Z):\r\n\t\t\treturn 1\r\n\t\telse:\r\n\t\t\treturn 0\r\n\t\r\n\tdef JoinGeometry(list_skirtings):\r\n\t\tfor skirtings in list_skirtings:\r\n\t\t\tfor index in range(len(skirtings)):\r\n\t\t\t\tindx1 = index-1\r\n\t\t\t\tif index == 0:\r\n\t\t\t\t\tindx1 = -1\r\n\t\t\t\t#Join elements\r\n\t\t\t\ttry:\r\n\t\t\t\t\tcurve1 = skirtings[indx1].Location.Curve\r\n\t\t\t\t\tcurve2 = skirtings[index].Location.Curve\r\n\t\t\t\t\tif str(curve1.Intersect(curve2)) == str(SetComparisonResult.Overlap):\r\n\t\t\t\t\t\tJoinGeometryUtils.JoinGeometry(doc, skirtings[indx1], skirtings[index])\r\n\t\t\t\texcept Exception as e:\r\n\t\t\t\t\tpass\r\n\t\r\n\tdef rectifyCurve(curve_sk1, curve_sk2):\r\n\t\tsk1_ini_point = curve_sk1.GetEndPoint(0)\r\n\t\tsk1_end_point = curve_sk1.GetEndPoint(1)\r\n\t\tsk2_ini_point = curve_sk2.GetEndPoint(0)\r\n\t\tsk2_end_point = curve_sk2.GetEndPoint(1)\r\n\t\ttry:\r\n\t\t\tline_sk1 = Line.CreateUnbound(sk1_ini_point, sk1_end_point-sk1_ini_point)\r\n\t\t\tline_sk2 = Line.CreateUnbound(sk2_ini_point, sk2_end_point-sk2_ini_point)\r\n\t\t\tresult_inter = clr.Reference[IntersectionResultArray]()\r\n\t\t\tline_sk1.Intersect(line_sk2, result_inter)\r\n\t\t\titem = result_inter.Value.get_Item(0)\r\n\t\t\tpoint_intersection = item.XYZPoint \r\n\t\t\tif point_intersection:\r\n\t\t\t\tproj_inter = curve_sk1.Project(point_intersection)\r\n\t\t\t\tif proj_inter.IsAlmostEqualTo(point_intersection):\r\n\t\t\t\t\tif sk1_ini_point.DistanceTo(point_intersection) < sk1_end_point.DistanceTo(point_intersection):\r\n\t\t\t\t\t\treturn Line.CreateBound(point_intersection, sk1_end_point)\r\n\t\t\t\t\telse:\r\n\t\t\t\t\t\treturn Line.CreateBound(sk1_ini_point, point_intersection)\r\n\t\texcept:\r\n\t\t\tpass\r\n\t\treturn curve_sk1\r\n \t\t\t\r\n\tdef findIntersectionsAndTrim(all_curves):\r\n\t\ttrimmed_curves=[]\r\n\t\tfor index in range(len(all_curves)):\r\n\t\t\tindx1 = index-1\r\n\t\t\tif index == 0:\r\n\t\t\t\tindx1 = -1\r\n\t\t\trec_curve = rectifyCurve(all_curves[index][0], all_curves[indx1][0])\r\n\t\t\tif len(all_curves) > 2:\r\n\t\t\t\tnext_indx = index + 1\r\n\t\t\t\tif next_indx >= len(all_curves):\r\n\t\t\t\t\tnext_indx = 0\r\n\t\t\t\trec_curve = rectifyCurve(rec_curve, all_curves[next_indx][0])\r\n\t\t\ttrimmed_curves.Add([rec_curve, all_curves[index][1]])\r\n\t\treturn trimmed_curves\r\n\r\n\tdef createWalls(doc, all_rooms, wallType, RVTversion, inputs):\r\n\t\tsmall_wall = 0\r\n\t\tlist_skirtings=[]\r\n\t\tcatgs = doc.Settings.Categories\r\n\t\tseparationLineCat = catgs.get_Item(BuiltInCategory.OST_RoomSeparationLines)\r\n\t\tcounter = 0\r\n\t\tfor room in all_rooms:\r\n\t\t\tprogressForm._txtBlock2.Text = str(counter) + \" / \" + str(len(all_rooms)) + \" Rooms Processed\"\r\n\t\t\tprogressForm._progressBar.PerformStep()\r\n\t\t\tprogressForm.Refresh()\r\n\t\t\tApplication.DoEvents()\r\n\t\t\tif progressForm.interrupt == True:\r\n\t\t\t\tbreak\r\n\t\t\tcounter +=1\r\n\t\t\tsublist_skirtings=[]\r\n\t\t\troomLevelId = room.LevelId\r\n\t\t\theight = 0\r\n\t\t\t#Get Height\r\n\t\t\tif inputs[2]!=None:\r\n\t\t\t\theight = unitConverterToInternal(inputs[2], inputs[3])\r\n\t\t\telse:\r\n\t\t\t\troomParameter = room.get_Parameter(UnwrapElement(inputs[4]))\r\n\t\t\t\theight = roomParameter.AsDouble()\r\n\t\t\t#Get boundaries\r\n\t\t\topt = SpatialElementBoundaryOptions()\r\n\t\t\topt.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Finish\r\n\t\t\tboundaries = room.GetBoundarySegments(opt)\r\n\t\t\tall_curves = []\r\n\t\t\tif len(boundaries) > 0:\r\n\t\t\t\tfor bnd in boundaries:\r\n\t\t\t\t\tif bnd.Count > 0:\r\n\t\t\t\t\t\tfor seg in bnd:\r\n\t\t\t\t\t\t\ttry:\r\n\t\t\t\t\t\t\t\tele_seg = doc.GetElement(seg.ElementId)\r\n\t\t\t\t\t\t\t\tif ele_seg.Category.Id != separationLineCat.Id:\r\n\t\t\t\t\t\t\t\t\tif isinstance(ele_seg, Wall):\r\n\t\t\t\t\t\t\t\t\t\t#Skip curtain walls\r\n\t\t\t\t\t\t\t\t\t\tif ele_seg.WallType.Kind == WallKind.Curtain:\r\n\t\t\t\t\t\t\t\t\t\t\tcontinue\r\n\t\t\t\t\t\t\t\t\tif height > 0.13:\r\n\t\t\t\t\t\t\t\t\t\twall_curve = seg.GetCurve()\r\n\t\t\t\t\t\t\t\t\t\tall_curves.Add([wall_curve, ele_seg])\r\n\t\t\t\t\t\t\texcept Exception as e:\r\n\t\t\t\t\t\t\t\tpass\r\n\t\t\t#Modify curves for new skirtings\r\n\t\t\ttrimmed_curves = findIntersectionsAndTrim(all_curves)\r\n\t\t\tfor wall_curve, ele_seg in trimmed_curves:\t\t\t\t\r\n\t\t\t\ttry:\r\n\t\t\t\t\tpro_st_point = wall_curve.GetEndPoint(0)\r\n\t\t\t\t\tpro_end_point = wall_curve.GetEndPoint(1)\r\n\t\t\t\t\ttry:\r\n\t\t\t\t\t\tskirting = Wall.Create(doc, wall_curve, wallType.Id, roomLevelId, height,0,True,False)\r\n\t\t\t\t\t\tJoinGeometryUtils.JoinGeometry(doc, skirting, ele_seg)\r\n\t\t\t\t\texcept Exception as e:\r\n\t\t\t\t\t\tAutodesk.Revit.UI.TaskDialog.Show(\"11\",str(e))\r\n\t\t\t\t\tdoc.Regenerate()\r\n\t\t\t\t\t#Locate interior boundary line\r\n\t\t\t\t\tskirting.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set(2)\r\n\t\t\t\t\tvc = -skirting.Orientation * skirting.Width/2\r\n\t\t\t\t\ttr = Transform.CreateTranslation(vc)\r\n\t\t\t\t\ttrans_ini_point = tr.OfPoint(pro_st_point)\r\n\t\t\t\t\ttrans_end_point = tr.OfPoint(pro_end_point)\r\n\t\t\t\t\tskirting.Location.Curve = Line.CreateBound(trans_ini_point, trans_end_point)\r\n\t\t\t\t\tsublist_skirtings.Add(skirting)\r\n\t\t\t\texcept Exception as e:\r\n\t\t\t\t\tpass\r\n\t\t\t\tlist_skirtings.Add(sublist_skirtings)\r\n\t\tif small_wall ==1:\r\n\t\t\ttask2 = Autodesk.Revit.UI.TaskDialog(\"Create Wall Finish by Room/s\")\r\n\t\t\ttask2.MainInstruction = \"One or more walls cannot be created because the height specified is too low or none.\"\r\n\t\t\ttask2.Show()\r\n\t\treturn list_skirtings\r\n\t\r\n\tdef OnFailuresProcessing(sender, e):\r\n\t\ttry:\r\n\t\t\tif susbcribe == True:\r\n\t\t\t\ta = e.GetFailuresAccessor()\r\n\t\t\t\tfailures = a.GetFailureMessages()\r\n\t\t\t\tfor f in failures:\r\n\t\t\t\t\tfailID = f.GetFailureDefinitionId()\r\n\t\t\t\t\tif failID == BuiltInFailures.JoinElementsFailures.JoiningDisjointWarn or failID == BuiltInFailures.JoinElementsFailures.JoiningDisjoint or str(failID.Guid) == \"1b9dacf3-db22-45d5-b071-42516278ffb1\":\r\n\t\t\t\t\t\ta.ResolveFailures(failures)\r\n\t\t\t\t\t\te.SetProcessingResult(FailureProcessingResult.ProceedWithCommit)\r\n\t\t\t\treturn e.SetProcessingResult(FailureProcessingResult.Continue)\r\n\t\texcept Exception as excp:\r\n\t\t\tpass\r\n\t\t\t\t\r\n\r\n\tuiapp = DocumentManager.Instance.CurrentUIApplication.Application\r\n\tdoc = DocumentManager.Instance.CurrentDBDocument\r\n\tuidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument\r\n\tapp = doc.Application\r\n\tversion = int(app.VersionNumber)\r\n\t#View has to be Floorplan, CeilingPlan, AreaPlan or EngPlan\t\r\n\tinpt_all_rooms = str(IN[0][0])\r\n\tinpt_sel_type = doc.GetElement(IN[0][1])\r\n\tsusbcribe = False\r\n\tif inpt_all_rooms == \"True\":\r\n\t\tsel_View = doc.ActiveView\r\n\t\t#Project or System browser selected\r\n\t\tif sel_View.ViewType == ViewType.ProjectBrowser or sel_View.ViewType == ViewType.SystemBrowser:\r\n\t\t\tsel_View = doc.GetElement(uidoc.GetOpenUIViews()[0].ViewId)\r\n\t\tif sel_View.ViewType == ViewType.FloorPlan or sel_View.ViewType == ViewType.CeilingPlan or sel_View.ViewType == ViewType.AreaPlan or sel_View.ViewType == ViewType.EngineeringPlan:\r\n\t\t\t#Get all rooms of current view\r\n\t\t\tuiapp.FailuresProcessing += OnFailuresProcessing\r\n\t\t\tsusbcribe = True\r\n\t\t\tall_rooms = [room for room in FilteredElementCollector(doc, sel_View.Id).OfClass(SpatialElement) if isinstance(room, Architecture.Room)]\r\n\t\t\tuidoc.Selection.SetElementIds(List[ElementId]())\r\n\t\t\tprogressForm = FormWithProgresBar()\r\n\t\t\tprogressForm._progressBar.Maximum = len(all_rooms)\r\n\t\t\tprogressForm._progressBar.Minimum = 0\r\n\t\t\tprogressForm._progressBar.Step = 1\r\n\t\t\tprogressForm.Show()\r\n\t\t\ttrans = Transaction(doc, \"Create Wall Finish by Room/s\")\r\n\t\t\ttrans.Start()\r\n\t\t\tall_walls = createWalls(doc, all_rooms, inpt_sel_type, version, input)\r\n\t\t\tJoinGeometry(all_walls)\r\n\t\t\tprogressForm.Refresh()\r\n\t\t\tApplication.DoEvents()\r\n\t\t\tif progressForm.interrupt == True:\r\n\t\t\t\ttrans.RollBack()\r\n\t\t\t\tprogressForm.Close()\r\n\t\t\t\tAutodesk.Revit.UI.TaskDialog.Show(\"Process Cancelled\",\"The process has been interrupted. Any processed action has been undone.\")\r\n\t\t\telse:\r\n\t\t\t\ttrans.Commit()\r\n\t\t\t\tprogressForm.Close()\r\n\telse:\r\n\t\t#Get selected rooms if false\r\n\t\tinpt_sel_rooms = List[ElementId]()\r\n\t\tall_rooms = List[Element]()\r\n\t\tif uidoc.Selection.GetElementIds().Count == 0:\r\n\t\t\t#Nothing selected, let the user select\r\n\t\t\ttry:\r\n\t\t\t\tinpt_sel_rooms = pickobject()\r\n\t\t\texcept:\r\n\t\t\t\tpass\r\n\t\telse:\r\n\t\t\tinpt_sel_rooms = uidoc.Selection.GetElementIds()\r\n\t\t\t\r\n\t\tfor item in inpt_sel_rooms:\r\n\t\t\telemento = doc.GetElement(item)\r\n\t\t\tif isinstance(elemento, Architecture.Room):\r\n\t\t\t\tall_rooms.Add(elemento)\r\n\t\tif len(all_rooms) == 0:\t\t\r\n\t\t\ttask2 = Autodesk.Revit.UI.TaskDialog(\"Create Wall Finish by Room/s\")\r\n\t\t\ttask2.MainInstruction = \"No rooms were selected in Revit.\"\r\n\t\t\ttask2.Show()\r\n\t\t\tuidoc.Selection.SetElementIds(List[ElementId]())\r\n\t\telse:\r\n\t\t\tuiapp.FailuresProcessing += OnFailuresProcessing\r\n\t\t\tsusbcribe = True\r\n\t\t\tprogressForm = FormWithProgresBar()\r\n\t\t\tprogressForm._progressBar.Maximum = len(all_rooms)\r\n\t\t\tprogressForm._progressBar.Minimum = 0\r\n\t\t\tprogressForm._progressBar.Step = 1\r\n\t\t\tprogressForm.Show()\r\n\t\t\ttrans = Transaction(doc, \"Create Wall Finish by Room/s\")\r\n\t\t\ttrans.Start()\r\n\t\t\tall_walls = createWalls(doc, all_rooms, inpt_sel_type, version, input)\r\n\t\t\tJoinGeometry(all_walls)\r\n\t\t\tprogressForm.Refresh()\r\n\t\t\tApplication.DoEvents()\r\n\t\t\tif progressForm.interrupt == True:\r\n\t\t\t\ttrans.RollBack()\r\n\t\t\t\tprogressForm.Close()\r\n\t\t\t\tAutodesk.Revit.UI.TaskDialog.Show(\"Process Cancelled\",\"The process has been interrupted. Any processed action has been undone.\")\r\n\t\t\telse:\r\n\t\t\t\ttrans.Commit()\r\n\t\t\t\tprogressForm.Close()\r\n\tif susbcribe:\t\t\r\n\t\tuiapp.FailuresProcessing -= OnFailuresProcessing\r\n\tsusbcribe = False\r\nOUT=0\r\n\"\"\"\r\nThis script is based on Room Finishing by BIM42. \r\nAll original code is licensed under MIT License, however all modifications and improvements are licensed under a different license agreement included below:\r\n################################\r\nMIT License\r\nCopyright (c) 2014 Simon Moreau\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE.\r\n################################\r\nLicense Agreement\r\nFor the use of this script\r\nThis License Agreement (this “Agreement” of this “License Agreement”) is made and effective as of the current date (the “Commencement Date”) by and between Nonica by Estudio Alonso Candau SLP a company organized and existing in Spain with a registered address at Avd.Chafarinas 16 Puerto Rey Vera, Almeria (“Licensor”) and yourself (“Licensee”).\r\nWHEREAS:\r\n1.\tLicensee wishes to obtain access and use this script (hereinafter, the “Asset”), and\r\n2.\tLicensor is willing to grant to the Licensee a non-exclusive, non-transferable License to use the Asset for the term and specific purpose set forth in this Agreement,\r\nNOW, THEREFORE, your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms and Conditions. These Terms and Conditions apply to all visitors, users and others who access or use this script.\r\n1. Definitions\r\n1.1 “Agreement” means this License Agreement including the attached Schedule.\r\n1.2 “Confidential Information” means information that:\r\na. is by its nature confidential;\r\nb. is designated in writing by Licensor as confidential;\r\nc. the Licensee knows or reasonably ought to know is confidential;\r\nd. Information comprised in or relating to any Intellectual Property Rights of Licensor.\r\n1.3 “Asset” means the Asset provided by Licensor as specified in Item 6 of the Schedule in the form as stated in Item 7 of the Schedule.\r\n1.4 “Intellectual Property Rights” means all rights in and to any copyright, trademark, trading name, design, patent, know how (trade secrets) and all other rights resulting from intellectual activity in the industrial, scientific, literary or artistic field and any application or right to apply for registration of any of these rights and any right to protect or enforce any of these rights, as further specified in clause 5.\r\n1.5 “Party” means a person or business entity who has executed this Agreement; details of the Parties are specified in Item 2 of the Schedule.\r\n1.6 “Term” means the term of this Agreement commencing on the Commencement Date as specified in Item 4 of the Schedule and expiring on the Expiry Date specified in Item 5 of the Schedule.\r\n2. License Grant\r\n2.1 Licensor grants to the Licensee a non-exclusive, non-transferable License for the Term to use the Asset for the specific purpose specified in this Agreement, subject to the terms and conditions set out in this Agreement.\r\n3. Charges\r\n3.1 In consideration of the Licensor providing the License under clause 2 of this License Agreement, the Licensee agrees to pay Licensor the amount of the License Charge as specified in Item 9 of the Schedule.\r\n4. Licensee’s Obligations\r\n4.1 The Licensee cannot use the Asset, for purposes other than as specified in this Agreement and in Item 8 of the Schedule.\r\n4.2 The Licensee may permit its employees to use the Asset for the purposes described in Item 8, provided that the Licensee takes all necessary steps and imposes the necessary conditions to ensure that all employees using the Asset do not commercialise or disclose the contents of it to any third person, or use it other than in accordance with the terms of this Agreement.\r\n4.3 The Licensee will not distribute, sell, License or sub-License, let, trade or expose for sale the Asset to a third party.\r\n4.4 No copies of the Asset are to be made other than as expressly approved by Licensor.\r\n4.5 No changes to the Asset or its content may be made by Licensee.\r\n4.6 The Licensee will provide technological and security measures to ensure that the Asset which the Licensee is responsible for is physically and electronically secure from unauthorised use or access.\r\n4.7 Licensee shall ensure that the Asset retains all Licensor copyright notices and other proprietary legends and all trademarks or service marks of Licensor.\r\n5. Intellectual Property Rights\r\n5.1 All Intellectual Property Rights over and in respect of the Asset are owned by Licensor. The Licensee does not acquire any rights of ownership in the Asset.\r\n6. Limitation of Liability\r\n6.1 The Licensee acknowledges and agrees that neither Licensor nor its board members, officers, employees or agents, will be liable for any loss or damage arising out of or resulting from Licensor’s provision of the Asset under this Agreement, or any use of the Asset by the Licensee or its employees; and Licensee hereby releases Licensor to the fullest extent from any such liability, loss, damage or claim.\r\n7. Confidentiality\r\n7.1 Neither Party may use, disclose or make available to any third party the other Party’s Confidential Information, unless such use or disclosure is done in accordance with the terms of this Agreement.\r\n7.2 Each Party must hold the other Party’s Confidential Information secure and in confidence, except to the extent that such Confidential Information:\r\na. is required to be disclosed according to the requirements of any law, judicial or legislative body or government agency; or\r\nb. was approved for release in writing by the other Party, but only to the extent of and subject to such conditions as may be imposed in such written authorisation.\r\n7.3 This clause 7 will survive termination of this Agreement.\r\n8. Disclaimers & Release\r\n8.1 To the extent permitted by law, Licensor will in no way be liable to the Licensee or any third party for any loss or damage, however caused (including through negligence) which may be directly or indirectly suffered in connection with any use of the Asset.\r\n8.2 The Asset is provided by Licensor on an “as is” basis.\r\n8.3 Licensor will not be held liable by the Licensee in any way, for any loss, damage or injury suffered by the Licensee or by any other person related to any use of the Asset or any part thereof.\r\n8.4 Notwithstanding anything contained in this Agreement, in no event shall Licensor be liable for any claims, damages or loss which may arise from the modification, combination, operation or use of the Asset with Licensee computer programs.\r\n8.5 Licensor does not warrant that the Asset will function in any environment.\r\n8.6 The Licensee acknowledges that: a. The Asset has not been prepared to meet any specific requirements of any party, including any requirements of Licensee; and b. it is therefore the responsibility of the Licensee to ensure that the Asset meets its own individual requirements.\r\n8.7 To the extent permitted by law, no express or implied warranty, term, condition or undertaking is given or assumed by Licensor, including any implied warranty of merchantability or fitness for a particular purpose.\r\n9. Indemnification\r\n9.1 The Licensee must indemnify, defend and hold harmless Licensor, its board members, officers, employees and agents from and against any and all claims (including third party claims), demands, actions, suits, expenses (including attorney’s fees) and damages (including indirect or consequential loss) resulting in any way from:\r\na. Licensee’s and Licensee’s employee’s use or reliance on the Asset,\r\nb. any breach of the terms of this License Agreement by the Licensee or any Licensee employee, and\r\nc. any other act of Licensee.\r\n9.2 This clause 9 will survive termination of this Agreement.\r\n10. Waiver\r\n10.1 Any failure or delay by either Party to exercise any right, power or privilege hereunder or to insist upon observance or performance by the other of the provisions of this License Agreement shall not operate or be construed as a waiver thereof.\r\n11. Governing Law\r\n11.1 This Agreement will be construed by and governed in accordance with the laws of Spain. The Parties submit to exclusive jurisdiction of the courts of Spain.\r\n12. Termination\r\n12.1 This Agreement and the License granted herein commences upon the Commencement Date and is granted for the Term, unless otherwise terminated by Licensor in the event of any of the following:\r\na. if the Licensee is in breach of any term of this License Agreement and has not corrected such breach to Licensor’s reasonable satisfaction within 7 days of Licensor’s notice of the same;\r\nb. if the Licensee becomes insolvent, or institutes (or there is instituted against it) proceedings in bankruptcy, insolvency, reorganization or dissolution, or makes an assignment for the benefit of creditors; or\r\nc. the Licensee is in breach of clause 5 or 7 of this Agreement.\r\n12.2 Termination under this clause shall not affect any other rights or remedies Licensor may have.\r\n14. Assignment\r\n14.1 Licensee shall not assign any rights of this License Agreement, without the prior written consent of Licensor.\r\n15. Notices\r\n15.1 All notices required under this Agreement shall be in writing and shall be deemed given (i) when delivered personally; (ii) five (5) days after mailing, when sent certified mail, return receipt requested and postage prepaid; or (iii) one (1) business day after dispatch, when sent via a commercial overnight carrier, fees prepaid. All notices given by either Party must be sent to the address of the other as first written above (unless otherwise changed by written notice).\r\n16. Counterparts\r\n16.1 This Agreement may be executed in any number of counterparts, each of which shall be deemed to be an original and all of which taken together shall constitute one instrument.\r\n17. Severability\r\n17.1 The Parties recognize the uncertainty of the law with respect to certain provisions of this Agreement and expressly stipulate that this Agreement will be construed in a manner that renders its provisions valid and enforceable to the maximum extent possible under applicable law. To the extent that any provisions of this Agreement are determined by a court of competent jurisdiction to be invalid or unenforceable, such provisions will be deleted from this Agreement or modified so as to make them enforceable and the validity and enforceability of the remainder of such provisions and of this Agreement will be unaffected.\r\n18. Entire Agreement\r\n18.1 This Agreement contains the entire agreement between the Parties and supersedes any previous understanding, commitments or agreements, oral or written. Further, this Agreement may not be modified, changed, or otherwise altered in any respect except by a written agreement signed by both Parties.\r\nIN WITNESS WHEREOF, this Agreement, including the attached Schedule, was signed by the Parties under the hands of their duly authorized representatives and made effective as of the current date.\r\nNonica by Estudio Alonso Candau SLP,\r\nSignature\r\n02/05/2021\r\nJaime Alonso Candau\r\nPlease contact hello@nonica.io with any further doubt/request.\r\nYour signatureby using and accessing this script.\r\nSigned by accepting these terms.\r\nCurrent date.\r\n\"\"\"",
+      "VariableInputPorts": true,
+      "Id": "72a300681550424281f7039e6c156aa0",
+      "Inputs": [
+        {
+          "Id": "3fab6dd7305d4481974dfa2dda6f0d61",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "2b8ab6a2d7884567a08dd4b7a0e1456e",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded IronPython script."
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "NodeType": "PythonScriptNode",
+      "Code": "import sys\r\nimport clr\r\nclr.AddReference('ProtoGeometry')\r\nfrom Autodesk.DesignScript.Geometry import *\r\n\r\nimport os.path\r\n\r\nclr.AddReference('RevitAPI')\r\nimport Autodesk\r\nfrom Autodesk.Revit.DB import *\r\nfrom Autodesk.Revit import DB\r\n\r\nclr.AddReference(\"RevitAPIUI\")\r\nimport Autodesk \r\nfrom Autodesk.Revit.UI import *\r\n\r\nclr.AddReference('System.Drawing')\r\nclr.AddReference('System.Windows.Forms')\r\nimport System.Drawing\r\nimport System.Windows.Forms\r\n\r\nfrom System.Drawing import *\r\nfrom System.Reflection import Assembly\r\nfrom System.Windows.Forms import *\r\n\r\nclr.AddReference('System.Data')\r\nfrom System.Data import *\r\n\r\nclr.AddReference(\"System.Core\")\r\nimport System.Linq\r\nclr.ImportExtensions(System.Linq)\r\n\r\nclr.AddReference(\"RevitServices\")\r\nimport RevitServices\r\nfrom RevitServices.Persistence import DocumentManager\r\n\r\nclass Form24(Form):\r\n    def __init__(self, lstSchedule, lstValue, _doc, RVTver):\r\n        self.Font = Font(self.Font.FontFamily, 16, FontStyle.Regular, GraphicsUnit.Pixel)\r\n        roomList = FilteredElementCollector(_doc).OfCategory(BuiltInCategory.OST_Rooms).ToList()\r\n        list_par = []\r\n        list_values = []\r\n        self.width_par = 1\r\n        if len(roomList) > 0:\r\n            sampleRoom = roomList[0]\r\n            if RVTver > 2021:\r\n                for par in sampleRoom.Parameters:\r\n                    if par.Definition.GetDataType() == SpecTypeId.Length:\r\n                        list_par.Add(par.Definition.Name)\r\n                        list_values.Add(par.Definition)\r\n            else:\r\n                for par in sampleRoom.Parameters:\r\n                    if par.Definition.ParameterType == ParameterType.Length:\r\n                        list_par.Add(par.Definition.Name)\r\n                        list_values.Add(par.Definition)\r\n            zipeo = zip(list_par, list_values)\r\n            zipeo = sorted(zipeo, key = lambda x: x[0])\r\n            list_par = [x for x,y in zipeo]\r\n            list_values = [y for x,y in zipeo]\r\n            for txt in list_par:\r\n                potential_wd_par = TextRenderer.MeasureText(txt, self.Font).Width\r\n                if self.width_par < potential_wd_par:\r\n                    self.width_par = potential_wd_par\r\n        self._tableData_units = DataTable(\"Data\")\r\n        self._tableData_units.Columns.Add(\"Key\", System.String)\r\n        self._tableData_units.Columns.Add(\"Value\", System.Object)\r\n        list_units = [\"in MM\",\"in M\",\"in FT\", \"in INCH\"]\r\n        \r\n        self._tableData = DataTable(\"Data\")\r\n        self._tableData.Columns.Add(\"Key\", System.String)\r\n        self._tableData.Columns.Add(\"Value\", System.Object)\r\n        \r\n        self._tableDataPar = DataTable(\"Data\")\r\n        self._tableDataPar.Columns.Add(\"Key\", System.String)\r\n        self._tableDataPar.Columns.Add(\"Value\", System.Object)\r\n        self.width = 0\r\n        for txt in lstSchedule:\r\n            potential_wd = TextRenderer.MeasureText(txt, self.Font).Width\r\n            if self.width < potential_wd:\r\n                self.width = potential_wd\r\n        # populate dataTable\r\n        [self._tableData.Rows.Add(key_, value_ ) for key_, value_ in zip(lstSchedule, lstValue)]\r\n        [self._tableDataPar.Rows.Add(key_, value_ ) for key_, value_ in zip(list_par, list_values)]\r\n        [self._tableData_units.Rows.Add(key_, value_ ) for key_, value_ in zip(list_units, list_units)]\r\n        self.out = []\r\n        self.InitializeComponent()\r\n    \r\n    def InitializeComponent(self):\r\n        self._wall_types = System.Windows.Forms.ComboBox()\r\n        self._units_value = System.Windows.Forms.ComboBox()\r\n        self._drp_parameter = System.Windows.Forms.ComboBox()\r\n        self._radioBtn = System.Windows.Forms.RadioButton()\r\n        self._radioBtn2 = System.Windows.Forms.RadioButton()\r\n        self._button1 = System.Windows.Forms.Button()\r\n        self._txtBox = System.Windows.Forms.NumericUpDown()\r\n        self._txtBlock2 = System.Windows.Forms.Label()\r\n        self._txtBlock3 = System.Windows.Forms.Label()\r\n        self._radioBtn3 = System.Windows.Forms.RadioButton()\r\n        self._radioBtn4 = System.Windows.Forms.RadioButton()\r\n        self._panel = System.Windows.Forms.Panel();\r\n        self.SuspendLayout()\r\n        # \r\n        # _txtBox1\r\n        #         \r\n        self._txtBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right\r\n        self._txtBox.Location = System.Drawing.Point(245, 63)\r\n        self._txtBox.Name = \"txtBox\"\r\n        self._txtBox.Size = System.Drawing.Size(60, 244)\r\n        self._txtBox.DecimalPlaces = 0\r\n        self._txtBox.TabIndex = 0\r\n        self._txtBox.Increment = 0.1\r\n        self._txtBox.Maximum = 999999999\r\n        self._txtBox.Value = set_fix_value\r\n        # \r\n        # comboBox1\r\n        # \r\n        self._wall_types.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right\r\n        self._wall_types.Location = System.Drawing.Point(100, 30)\r\n        self._wall_types.Name = \"dropDown\"\r\n        self._wall_types.DataSource = self._tableData \r\n        self._wall_types.DisplayMember = \"Key\"\r\n        self._wall_types.Size = System.Drawing.Size(282, 244)\r\n        self._wall_types.TabIndex = 0\r\n        self._wall_types.DropDownWidth = self.width + 20\r\n        self._wall_types.DropDownStyle = ComboBoxStyle.DropDownList\r\n        # \r\n        # panel\r\n        #\r\n        self._panel.Name = \"panel_radBtn\"\r\n        self._panel.Size = System.Drawing.Size(500, 500)\r\n        # \r\n        # radiobutton3\r\n        # \r\n        self._radioBtn3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right\r\n        self._radioBtn3.Location = System.Drawing.Point(100, 65)\r\n        self._radioBtn3.Name = \"value_radiobutton\"\r\n        self._radioBtn3.Size = System.Drawing.Size(100, 20)\r\n        self._radioBtn3.Text = \"Value\"\r\n        self._radioBtn3.CheckedChanged += self.radioButton_CheckedChanged\r\n        if set_fix_value_sel:\r\n            self._radioBtn3.Checked = CheckState.Checked\r\n        else: \r\n            #Disable Units and number\r\n            self._txtBox.Enabled = False\r\n            self._units_value.Enabled = False\r\n        self._panel.Controls.Add(self._radioBtn3)\r\n        # \r\n        # dropdown units value\r\n        # \r\n        self._units_value.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right\r\n        self._units_value.Location = System.Drawing.Point(308, 62)\r\n        self._units_value.Name = \"units_value_drpdw\"\r\n        self._units_value.DataSource = self._tableData_units \r\n        self._units_value.DisplayMember = \"Key\"\r\n        self._units_value.Size = System.Drawing.Size(74, 244)\r\n        self._units_value.TabIndex = 0\r\n        self._units_value.DropDownStyle = ComboBoxStyle.DropDownList\r\n        # \r\n        # dropdown parameters\r\n        # \r\n        self._drp_parameter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right\r\n        self._drp_parameter.Location = System.Drawing.Point(245, 96)\r\n        self._drp_parameter.Name = \"dropDownPar\"\r\n        self._drp_parameter.DataSource = self._tableDataPar \r\n        self._drp_parameter.DisplayMember = \"Key\"\r\n        self._drp_parameter.Size = System.Drawing.Size(137, 244)\r\n        self._drp_parameter.TabIndex = 0\r\n        self._drp_parameter.DropDownWidth = self.width_par + 20\r\n        self._drp_parameter.DropDownStyle = ComboBoxStyle.DropDownList\r\n        self._drp_parameter.Enabled = False\r\n        # \r\n        # radiobutton4\r\n        # \r\n        self._radioBtn4.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right\r\n        self._radioBtn4.Location = System.Drawing.Point(100, 98)\r\n        self._radioBtn4.Name = \"param_radiobutton\"\r\n        self._radioBtn4.Size = System.Drawing.Size(160, 20)\r\n        self._radioBtn4.Text = \"From Room Par.\"\r\n        self._radioBtn4.CheckedChanged += self.radioButton_CheckedChanged\r\n        if not set_fix_value_sel:\r\n            self._radioBtn4.Checked = CheckState.Checked\r\n        self._panel.Controls.Add(self._radioBtn4)\r\n        # \r\n        # radiobutton1\r\n        # \r\n        self._radioBtn.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right\r\n        self._radioBtn.Location = System.Drawing.Point(12, 7)\r\n        self._radioBtn.Name = \"radiobutton1\"\r\n        self._radioBtn.Size = System.Drawing.Size(225, 20)\r\n        self._radioBtn.Text = \"All Rooms in Current View\"\r\n        if set_all_rooms_sel:\r\n            self._radioBtn.Checked = CheckState.Checked\r\n        # \r\n        # radiobutton2\r\n        # \r\n        self._radioBtn2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right\r\n        self._radioBtn2.Location = System.Drawing.Point(240, 7)\r\n        self._radioBtn2.Name = \"radiobutton2\"\r\n        self._radioBtn2.Size = System.Drawing.Size(155, 20)\r\n        self._radioBtn2.Text = \"Selected Rooms\"\r\n        if not set_all_rooms_sel:\r\n            self._radioBtn2.Checked = CheckState.Checked\r\n        # \r\n        # button1\r\n        # \r\n        self._button1.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right\r\n        self._button1.Location = System.Drawing.Point(12, 128)\r\n        self._button1.Name = \"button1\"\r\n        self._button1.Size = System.Drawing.Size(371, 27)\r\n        self._button1.TabIndex = 2\r\n        self._button1.Text = \"Create Skirting/s\"\r\n        self._button1.UseVisualStyleBackColor = True\r\n        self._button1.Click += self.Button1Click\r\n        # \r\n        # TextBlock2\r\n        # \r\n        self._txtBlock2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left\r\n        self._txtBlock2.Location = System.Drawing.Point(12, 32)\r\n        self._txtBlock2.Name = \"txtBlock2\"\r\n        self._txtBlock2.Size = System.Drawing.Size(120, 20)\r\n        self._txtBlock2.TabIndex = 1\r\n        self._txtBlock2.Text = \"Wall Type:\"\r\n        # \r\n        # TextBlock3\r\n        # \r\n        self._txtBlock3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left\r\n        self._txtBlock3.Location = System.Drawing.Point(12, 73)\r\n        self._txtBlock3.Name = \"txtBlock3\"\r\n        self._txtBlock3.Size = System.Drawing.Size(75, 50)\r\n        self._txtBlock3.TabIndex = 1\r\n        self._txtBlock3.Text = \"Height of Skirting:\"\r\n        # \r\n        # Form24\r\n        # \r\n        self.Load += self.LoadedEvent\r\n        self.ClientSize = System.Drawing.Size(394, 168)\r\n        self.MaximizeBox = 0\r\n        self.MinimizeBox = 0\r\n        self.CenterToScreen() \r\n        self.FormBorderStyle = FormBorderStyle.FixedSingle\r\n        self.Controls.Add(self._button1)\r\n        self.Controls.Add(self._radioBtn)\r\n        self.Controls.Add(self._radioBtn2)\r\n        self.Controls.Add(self._txtBox)\r\n        self.Controls.Add(self._wall_types)\r\n        self.Controls.Add(self._txtBlock2)\r\n        self.Controls.Add(self._txtBlock3)\r\n        self.Controls.Add(self._drp_parameter)\r\n        self.Controls.Add(self._units_value)\r\n        self.Controls.Add(self._panel)\r\n        self.Name = \"Create Wall Finish by Room/s\"\r\n        self.Text = \"Create Wall Finish by Room/s\"\r\n        iconFilename = 'C:\\\\NONICAPRO\\\\OtherFiles\\\\System\\\\Nonicafavicon.ICO'\r\n        if not os.path.exists(iconFilename):\r\n            iconFilename = 'C:\\\\NONICA\\\\OtherFiles\\\\System\\\\Nonicafavicon.ICO'\r\n        icon = Icon(iconFilename)\r\n        self.Icon = icon\r\n        self.ResumeLayout(False)\r\n        \r\n    def LoadedEvent(self, sender, e):\r\n        self._units_value.SelectedIndex = set_unit_index\r\n        #Check if wall type key is contained\r\n        for mod_item in self._wall_types.Items:\r\n            if set_wall_type == mod_item['Key']:\r\n                self._wall_types.SelectedItem = mod_item\r\n                break\r\n        for mod_item in self._drp_parameter.Items:\r\n            if set_room_parameter == mod_item['Key']:\r\n                self._drp_parameter.SelectedItem = mod_item\r\n                break\r\n        \r\n        \r\n    def radioButton_CheckedChanged(self, sender, e):\r\n        if sender.Name.startswith(\"value\"):\r\n            self._txtBox.Enabled = sender.Checked\r\n            self._units_value.Enabled = sender.Checked\r\n        elif sender.Name.startswith(\"param\"):\r\n            self._drp_parameter.Enabled = sender.Checked\r\n\r\n    def Button1Click(self, sender, e):\r\n        items = []\r\n        if self._txtBox.Text == \"\":\r\n            self._txtBox.Value=100\r\n        items.Add(self._radioBtn.Checked)\r\n        items.Add(self._wall_types.SelectedItem['Value'])\r\n        if self._radioBtn3.Checked:\r\n            items.Add(self._txtBox.Value)\r\n            items.Add(self._units_value.SelectedItem['Value'])\r\n            items.Add(None)\r\n        elif self._radioBtn4.Checked:        \r\n            items.Add(None)\r\n            items.Add(None)\r\n            items.Add(self._drp_parameter.SelectedItem['Value'])        \r\n        self.out = items\r\n        self.DialogResult = DialogResult.Yes\r\n        self.Close()\r\n        \r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\nuidoc = DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument\r\napp = doc.Application\r\nversion = int(app.VersionNumber)\r\n\r\nall_types = DB.FilteredElementCollector(doc).OfClass(DB.WallType).WhereElementIsElementType()\r\n\r\nset_all_rooms_sel  = IN[0]\r\nset_wall_type      = IN[1]\r\nset_fix_value_sel  = IN[2]\r\nset_fix_value      = IN[3]\r\nset_unit_index     = IN[4]\r\nset_room_parameter = IN[5]\r\n\r\ntypes = []\r\ntypes_Ids = []\r\ntypes_Names = []\r\nfor type in all_types:\r\n    if type.Kind == WallKind.Basic:\r\n        types_Ids.append(type.Id)\r\n        types_Names.append(Element.Name.GetValue(type))\r\n\r\nlstSchedules, ValueList = [],[]\r\nif len(types_Names) == 0:\r\n    task2 = Autodesk.Revit.UI.TaskDialog(\"Create Wall Finish by Room/s\")\r\n    task2.MainInstruction = \"No wall type was detected in the model.\"\r\n    task2.Show()\r\n    OUT=0\r\nelse:\r\n    zip_type = zip(types_Names, types_Ids)\r\n    zip_type = sorted(zip_type, key = lambda x: x[0])\r\n    #zip_type.sort()\r\n    for sch, value in zip_type:\r\n        lstSchedules.append(sch)\r\n        ValueList.append(value)\r\n    objForm = Form24(lstSchedules, ValueList, doc, version)\r\n    result_win = objForm.ShowDialog()\r\n    if result_win == DialogResult.Cancel:\r\n        OUT=0\r\n    else:\r\n        Result_check = objForm.out\r\n        #Check Active View and change if browser\r\n        sel_View = doc.ActiveView\r\n        if sel_View.ViewType == ViewType.ProjectBrowser or sel_View.ViewType == ViewType.SystemBrowser:\r\n            sel_View = doc.GetElement(uidoc.GetOpenUIViews()[0].ViewId)\r\n        #If type of view with Rooms\r\n        if sel_View.ViewType == ViewType.FloorPlan or sel_View.ViewType == ViewType.CeilingPlan or sel_View.ViewType == ViewType.AreaPlan or sel_View.ViewType == ViewType.EngineeringPlan:\r\n            #Chequear habitaciones\r\n            all_rooms = [room for room in FilteredElementCollector(doc, sel_View.Id).OfClass(SpatialElement) if isinstance(room, Architecture.Room)]\r\n            if len(all_rooms) == 0:        \r\n                task2 = Autodesk.Revit.UI.TaskDialog(\"Create Wall Finish by Room/s\")\r\n                task2.MainInstruction = \"No rooms were detected in your current Revit view. Please, change your current view.\"\r\n                task2.Show()\r\n                OUT=0\r\n            else:\r\n                OUT = Result_check\r\n        else:\r\n            task2 = Autodesk.Revit.UI.TaskDialog(\"Create Wall Finish by Room/s\")\r\n            task2.MainInstruction = \"Rooms are not available in Revit in \" + str(sel_View.ViewType) + \" views. Please, change your current view.\"\r\n            task2.Show()\r\n            OUT=0\r\n\"\"\"\r\nThis script is based on Room Finishing by BIM42. \r\nAll original code is licensed under MIT License, however all modifications and improvements are licensed under a different license agreement included below:\r\n################################\r\nMIT License\r\nCopyright (c) 2014 Simon Moreau\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE.\r\n################################\r\nLicense Agreement\r\nFor the use of this script\r\nThis License Agreement (this “Agreement” of this “License Agreement”) is made and effective as of the current date (the “Commencement Date”) by and between Nonica by Estudio Alonso Candau SLP a company organized and existing in Spain with a registered address at Avd.Chafarinas 16 Puerto Rey Vera, Almeria (“Licensor”) and yourself (“Licensee”).\r\nWHEREAS:\r\n1.    Licensee wishes to obtain access and use this script (hereinafter, the “Asset”), and\r\n2.    Licensor is willing to grant to the Licensee a non-exclusive, non-transferable License to use the Asset for the term and specific purpose set forth in this Agreement,\r\nNOW, THEREFORE, your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms and Conditions. These Terms and Conditions apply to all visitors, users and others who access or use this script.\r\n1. Definitions\r\n1.1 “Agreement” means this License Agreement including the attached Schedule.\r\n1.2 “Confidential Information” means information that:\r\na. is by its nature confidential;\r\nb. is designated in writing by Licensor as confidential;\r\nc. the Licensee knows or reasonably ought to know is confidential;\r\nd. Information comprised in or relating to any Intellectual Property Rights of Licensor.\r\n1.3 “Asset” means the Asset provided by Licensor as specified in Item 6 of the Schedule in the form as stated in Item 7 of the Schedule.\r\n1.4 “Intellectual Property Rights” means all rights in and to any copyright, trademark, trading name, design, patent, know how (trade secrets) and all other rights resulting from intellectual activity in the industrial, scientific, literary or artistic field and any application or right to apply for registration of any of these rights and any right to protect or enforce any of these rights, as further specified in clause 5.\r\n1.5 “Party” means a person or business entity who has executed this Agreement; details of the Parties are specified in Item 2 of the Schedule.\r\n1.6 “Term” means the term of this Agreement commencing on the Commencement Date as specified in Item 4 of the Schedule and expiring on the Expiry Date specified in Item 5 of the Schedule.\r\n2. License Grant\r\n2.1 Licensor grants to the Licensee a non-exclusive, non-transferable License for the Term to use the Asset for the specific purpose specified in this Agreement, subject to the terms and conditions set out in this Agreement.\r\n3. Charges\r\n3.1 In consideration of the Licensor providing the License under clause 2 of this License Agreement, the Licensee agrees to pay Licensor the amount of the License Charge as specified in Item 9 of the Schedule.\r\n4. Licensee’s Obligations\r\n4.1 The Licensee cannot use the Asset, for purposes other than as specified in this Agreement and in Item 8 of the Schedule.\r\n4.2 The Licensee may permit its employees to use the Asset for the purposes described in Item 8, provided that the Licensee takes all necessary steps and imposes the necessary conditions to ensure that all employees using the Asset do not commercialise or disclose the contents of it to any third person, or use it other than in accordance with the terms of this Agreement.\r\n4.3 The Licensee will not distribute, sell, License or sub-License, let, trade or expose for sale the Asset to a third party.\r\n4.4 No copies of the Asset are to be made other than as expressly approved by Licensor.\r\n4.5 No changes to the Asset or its content may be made by Licensee.\r\n4.6 The Licensee will provide technological and security measures to ensure that the Asset which the Licensee is responsible for is physically and electronically secure from unauthorised use or access.\r\n4.7 Licensee shall ensure that the Asset retains all Licensor copyright notices and other proprietary legends and all trademarks or service marks of Licensor.\r\n5. Intellectual Property Rights\r\n5.1 All Intellectual Property Rights over and in respect of the Asset are owned by Licensor. The Licensee does not acquire any rights of ownership in the Asset.\r\n6. Limitation of Liability\r\n6.1 The Licensee acknowledges and agrees that neither Licensor nor its board members, officers, employees or agents, will be liable for any loss or damage arising out of or resulting from Licensor’s provision of the Asset under this Agreement, or any use of the Asset by the Licensee or its employees; and Licensee hereby releases Licensor to the fullest extent from any such liability, loss, damage or claim.\r\n7. Confidentiality\r\n7.1 Neither Party may use, disclose or make available to any third party the other Party’s Confidential Information, unless such use or disclosure is done in accordance with the terms of this Agreement.\r\n7.2 Each Party must hold the other Party’s Confidential Information secure and in confidence, except to the extent that such Confidential Information:\r\na. is required to be disclosed according to the requirements of any law, judicial or legislative body or government agency; or\r\nb. was approved for release in writing by the other Party, but only to the extent of and subject to such conditions as may be imposed in such written authorisation.\r\n7.3 This clause 7 will survive termination of this Agreement.\r\n8. Disclaimers & Release\r\n8.1 To the extent permitted by law, Licensor will in no way be liable to the Licensee or any third party for any loss or damage, however caused (including through negligence) which may be directly or indirectly suffered in connection with any use of the Asset.\r\n8.2 The Asset is provided by Licensor on an “as is” basis.\r\n8.3 Licensor will not be held liable by the Licensee in any way, for any loss, damage or injury suffered by the Licensee or by any other person related to any use of the Asset or any part thereof.\r\n8.4 Notwithstanding anything contained in this Agreement, in no event shall Licensor be liable for any claims, damages or loss which may arise from the modification, combination, operation or use of the Asset with Licensee computer programs.\r\n8.5 Licensor does not warrant that the Asset will function in any environment.\r\n8.6 The Licensee acknowledges that: a. The Asset has not been prepared to meet any specific requirements of any party, including any requirements of Licensee; and b. it is therefore the responsibility of the Licensee to ensure that the Asset meets its own individual requirements.\r\n8.7 To the extent permitted by law, no express or implied warranty, term, condition or undertaking is given or assumed by Licensor, including any implied warranty of merchantability or fitness for a particular purpose.\r\n9. Indemnification\r\n9.1 The Licensee must indemnify, defend and hold harmless Licensor, its board members, officers, employees and agents from and against any and all claims (including third party claims), demands, actions, suits, expenses (including attorney’s fees) and damages (including indirect or consequential loss) resulting in any way from:\r\na. Licensee’s and Licensee’s employee’s use or reliance on the Asset,\r\nb. any breach of the terms of this License Agreement by the Licensee or any Licensee employee, and\r\nc. any other act of Licensee.\r\n9.2 This clause 9 will survive termination of this Agreement.\r\n10. Waiver\r\n10.1 Any failure or delay by either Party to exercise any right, power or privilege hereunder or to insist upon observance or performance by the other of the provisions of this License Agreement shall not operate or be construed as a waiver thereof.\r\n11. Governing Law\r\n11.1 This Agreement will be construed by and governed in accordance with the laws of Spain. The Parties submit to exclusive jurisdiction of the courts of Spain.\r\n12. Termination\r\n12.1 This Agreement and the License granted herein commences upon the Commencement Date and is granted for the Term, unless otherwise terminated by Licensor in the event of any of the following:\r\na. if the Licensee is in breach of any term of this License Agreement and has not corrected such breach to Licensor’s reasonable satisfaction within 7 days of Licensor’s notice of the same;\r\nb. if the Licensee becomes insolvent, or institutes (or there is instituted against it) proceedings in bankruptcy, insolvency, reorganization or dissolution, or makes an assignment for the benefit of creditors; or\r\nc. the Licensee is in breach of clause 5 or 7 of this Agreement.\r\n12.2 Termination under this clause shall not affect any other rights or remedies Licensor may have.\r\n14. Assignment\r\n14.1 Licensee shall not assign any rights of this License Agreement, without the prior written consent of Licensor.\r\n15. Notices\r\n15.1 All notices required under this Agreement shall be in writing and shall be deemed given (i) when delivered personally; (ii) five (5) days after mailing, when sent certified mail, return receipt requested and postage prepaid; or (iii) one (1) business day after dispatch, when sent via a commercial overnight carrier, fees prepaid. All notices given by either Party must be sent to the address of the other as first written above (unless otherwise changed by written notice).\r\n16. Counterparts\r\n16.1 This Agreement may be executed in any number of counterparts, each of which shall be deemed to be an original and all of which taken together shall constitute one instrument.\r\n17. Severability\r\n17.1 The Parties recognize the uncertainty of the law with respect to certain provisions of this Agreement and expressly stipulate that this Agreement will be construed in a manner that renders its provisions valid and enforceable to the maximum extent possible under applicable law. To the extent that any provisions of this Agreement are determined by a court of competent jurisdiction to be invalid or unenforceable, such provisions will be deleted from this Agreement or modified so as to make them enforceable and the validity and enforceability of the remainder of such provisions and of this Agreement will be unaffected.\r\n18. Entire Agreement\r\n18.1 This Agreement contains the entire agreement between the Parties and supersedes any previous understanding, commitments or agreements, oral or written. Further, this Agreement may not be modified, changed, or otherwise altered in any respect except by a written agreement signed by both Parties.\r\nIN WITNESS WHEREOF, this Agreement, including the attached Schedule, was signed by the Parties under the hands of their duly authorized representatives and made effective as of the current date.\r\nNonica by Estudio Alonso Candau SLP,\r\nSignature\r\n02/05/2021\r\nJaime Alonso Candau\r\nPlease contact hello@nonica.io with any further doubt/request.\r\nYour signatureby using and accessing this script.\r\nSigned by accepting these terms.\r\nCurrent date.\r\n\"\"\"",
+      "VariableInputPorts": true,
+      "Id": "9adad06a9d6944c696b2b2a43ee8ad40",
+      "Inputs": [
+        {
+          "Id": "4ab7cfac5f044af1afa08f5f933de441",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "9f311d9308a4470b8463adc5c3b0c13f",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "55ce0527443a4615b53b2c7becbf2741",
+          "Name": "IN[2]",
+          "Description": "Input #2",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "edb0621ddad54f078b1f3e1022f80d1b",
+          "Name": "IN[3]",
+          "Description": "Input #3",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "5bc3e675a7014228ba5af7086148c491",
+          "Name": "IN[4]",
+          "Description": "Input #4",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "39359ec21b13418fbbbefe4372e58aeb",
+          "Name": "IN[5]",
+          "Description": "Input #5",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "5054267aa9784bceadcaaf3da1f208f6",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded IronPython script."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
+      "NodeType": "BooleanInputNode",
+      "InputValue": true,
+      "Id": "afe1739388a74f97b17fe8f3780c4033",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "96d494f251744ab2800bf5dc7aa7766b",
+          "Name": "",
+          "Description": "Boolean",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Selection between a true and false."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "NodeType": "StringInputNode",
+      "InputValue": "",
+      "Id": "af0362e9380e41f88f614bb10377bf9e",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "5018320f17a24850af11a5ebeef2942f",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.BoolSelector, CoreNodeModels",
+      "NodeType": "BooleanInputNode",
+      "InputValue": true,
+      "Id": "346c025bf66a45ff93e2202533effc9a",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "56ab6756f34d4416bf53d5cd871e5823",
+          "Name": "",
+          "Description": "Boolean",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Selection between a true and false."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "NodeType": "StringInputNode",
+      "InputValue": "",
+      "Id": "6507a9dc93964735a3d16a19f8d797cd",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "46c6b3c9874b4da588eb4d7d52872974",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.IntegerSlider, CoreNodeModels",
+      "NodeType": "NumberInputNode",
+      "NumberType": "Integer",
+      "InputValue": 100,
+      "MaximumValue": 9999999,
+      "MinimumValue": 0,
+      "StepValue": 1,
+      "Id": "14c5784977a545aba9fff2ab156c5e0d",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "289e9670a2d741a8b6fe3dff0e2ba024",
+          "Name": "",
+          "Description": "Int64",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "A slider that produces integer values."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.IntegerSlider, CoreNodeModels",
+      "NodeType": "NumberInputNode",
+      "NumberType": "Integer",
+      "InputValue": 0,
+      "MaximumValue": 3,
+      "MinimumValue": 0,
+      "StepValue": 1,
+      "Id": "8fac0fed84bf4910a4f0113c7d87c58c",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "67457609a6d14360b8beb6e7d31dba8f",
+          "Name": "",
+          "Description": "Int64",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "A slider that produces integer values."
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "5054267aa9784bceadcaaf3da1f208f6",
+      "End": "3fab6dd7305d4481974dfa2dda6f0d61",
+      "Id": "c2fc4499ef5e4f619c725c1b8e4570fd"
+    },
+    {
+      "Start": "96d494f251744ab2800bf5dc7aa7766b",
+      "End": "4ab7cfac5f044af1afa08f5f933de441",
+      "Id": "dfe2be75653446ad8fe5ebe0509fa278"
+    },
+    {
+      "Start": "5018320f17a24850af11a5ebeef2942f",
+      "End": "9f311d9308a4470b8463adc5c3b0c13f",
+      "Id": "5db397fff3d242618c761defb888a124"
+    },
+    {
+      "Start": "56ab6756f34d4416bf53d5cd871e5823",
+      "End": "55ce0527443a4615b53b2c7becbf2741",
+      "Id": "77980ba82d684d0db217dd3281a1d394"
+    },
+    {
+      "Start": "46c6b3c9874b4da588eb4d7d52872974",
+      "End": "39359ec21b13418fbbbefe4372e58aeb",
+      "Id": "1f5c339ce35d4ec1897f3b4d88c9b311"
+    },
+    {
+      "Start": "289e9670a2d741a8b6fe3dff0e2ba024",
+      "End": "edb0621ddad54f078b1f3e1022f80d1b",
+      "Id": "cfa700f1df244427b367c7d0fb7fdc9a"
+    },
+    {
+      "Start": "67457609a6d14360b8beb6e7d31dba8f",
+      "End": "5bc3e675a7014228ba5af7086148c491",
+      "Id": "2e1507696c884b52b83b20f0b8880ea2"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "2.6.2.15705",
+      "RunType": "Manual",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "NodeViews": [
+      {
+        "ShowGeometry": true,
+        "Name": "Creation Skirting",
+        "Id": "72a300681550424281f7039e6c156aa0",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 777.52289161230271,
+        "Y": 14.759226267260317
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Window Sk",
+        "Id": "9adad06a9d6944c696b2b2a43ee8ad40",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 575.82530854103743,
+        "Y": 19.921964991373329
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "1.Default All Rooms Setting Selected",
+        "Id": "afe1739388a74f97b17fe8f3780c4033",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 125.44702400833484,
+        "Y": -193.20868409279558
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "2.Default Wall Type Name (if exists)",
+        "Id": "af0362e9380e41f88f614bb10377bf9e",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 133.36014821654231,
+        "Y": -49.49945941207028
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "3.Default Fixed Value Setting Selected",
+        "Id": "346c025bf66a45ff93e2202533effc9a",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 130.95660556526991,
+        "Y": 81.931459185890617
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "6.Default Room Parameter (if exists)",
+        "Id": "6507a9dc93964735a3d16a19f8d797cd",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 131.50675294508642,
+        "Y": 483.906657361987
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "4.Default Fixed Value",
+        "Id": "14c5784977a545aba9fff2ab156c5e0d",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 121.31241264126766,
+        "Y": 211.23373436841547
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "5.Default Units Index (0=in MM, 1=in M, 2=in FT, 3=in INC)",
+        "Id": "8fac0fed84bf4910a4f0113c7d87c58c",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 52.688365297052769,
+        "Y": 336.10525051890454
+      }
+    ],
+    "Annotations": [],
+    "X": -116.81921665785433,
+    "Y": 105.81992731244657,
+    "Zoom": 0.73035790185729044
+  }
+}
