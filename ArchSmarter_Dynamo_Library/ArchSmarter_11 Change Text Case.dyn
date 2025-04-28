@@ -1,0 +1,1385 @@
+{
+  "Uuid": "3c9d0464-8643-5ffe-96e5-ab1769818209",
+  "IsCustomNode": false,
+  "Description": "Change text (sheet name, text note, room name) to upper or lower case",
+  "Name": "ArchSmarter_11 Change Text Case",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [
+    {
+      "Id": "a867f3561fac4235813c6b6ebecb1961",
+      "Name": "Categories",
+      "Type": "dropdownSelection",
+      "Value": "OST_TextNotes",
+      "Description": "All built-in categories.",
+      "SelectedIndex": 689
+    },
+    {
+      "Id": "ec7c977d78b8417f8a5e70cc9d9ed820",
+      "Name": "Categories",
+      "Type": "dropdownSelection",
+      "Value": "OST_Rooms",
+      "Description": "All built-in categories.",
+      "SelectedIndex": 517
+    },
+    {
+      "Id": "0f428669de70460cbd33eb947913b025",
+      "Name": "String",
+      "Type": "string",
+      "Value": " ",
+      "Description": "Creates a string.",
+      "SelectedIndex": 0
+    },
+    {
+      "Id": "8d048e2d017d4850b7de28d260beeb62",
+      "Name": "Categories",
+      "Type": "dropdownSelection",
+      "Value": "OST_Sheets",
+      "Description": "All built-in categories.",
+      "SelectedIndex": 540
+    },
+    {
+      "Id": "cbe71a32bec64da7a92300acbb71d698",
+      "Name": "String",
+      "Type": "string",
+      "Value": "Sheet Name",
+      "Description": "Creates a string.",
+      "SelectedIndex": 0
+    }
+  ],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "DSRevitNodesUI.ElementsOfCategory, DSRevitNodesUI",
+      "NodeType": "ExtensionNode",
+      "Id": "c0b30113646349e691d3ebf8b5bc5c3e",
+      "Inputs": [
+        {
+          "Id": "4a67a5e5527f4911b32d577280af06c0",
+          "Name": "Category",
+          "Description": "The Category",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "fb2383ded9324321872bec09dc9d9184",
+          "Name": "Elements",
+          "Description": "An element class.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Get all elements of the specified category from the model."
+    },
+    {
+      "ConcreteType": "DSRevitNodesUI.Categories, DSRevitNodesUI",
+      "SelectedIndex": 689,
+      "SelectedString": "OST_TextNotes",
+      "NodeType": "ExtensionNode",
+      "Id": "a867f3561fac4235813c6b6ebecb1961",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "ec347a037dca4d76aa030aaa4bee375a",
+          "Name": "Category",
+          "Description": "The selected Category.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "All built-in categories."
+    },
+    {
+      "ConcreteType": "DSRevitNodesUI.Categories, DSRevitNodesUI",
+      "SelectedIndex": 517,
+      "SelectedString": "OST_Rooms",
+      "NodeType": "ExtensionNode",
+      "Id": "ec7c977d78b8417f8a5e70cc9d9ed820",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "82f6cb293227462a81d8c9c1a4513f42",
+          "Name": "Category",
+          "Description": "The selected Category.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "All built-in categories."
+    },
+    {
+      "ConcreteType": "DSRevitNodesUI.ElementsOfCategory, DSRevitNodesUI",
+      "NodeType": "ExtensionNode",
+      "Id": "a257621cfe7b4956b320c0697bc0d082",
+      "Inputs": [
+        {
+          "Id": "88eba2775baa478681fe0c7d080e989a",
+          "Name": "Category",
+          "Description": "The Category",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "151bb012f5ac4ca4a63bc1006a4112c7",
+          "Name": "Elements",
+          "Description": "An element class.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Get all elements of the specified category from the model."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.Room.Name",
+      "Id": "a46359a197ba4ba28e992846f01db4d9",
+      "Inputs": [
+        {
+          "Id": "2404aaff57a14ca1ad46eaf22b9b53db",
+          "Name": "room",
+          "Description": "Revit.Elements.Room",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "414f29cac3d94e07934f4fc6715e87b0",
+          "Name": "string",
+          "Description": "string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Get room name\n\nRoom.Name: string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.String.ToUpper@string",
+      "Id": "758c9502a1594ddfb5d72b4866512f74",
+      "Inputs": [
+        {
+          "Id": "3d583ae9d2f8419b8ac03beb9a0e4a1e",
+          "Name": "string",
+          "Description": "String to be made uppercase\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "2a535e0fd6d14dd69202934912416991",
+          "Name": "string",
+          "Description": "Uppercase string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Converts the given string to all uppercase characters.\n\nString.ToUpper (string: string): string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.Room.SetName@string",
+      "Id": "110911636b5c42959a5899f1c420ec6c",
+      "Inputs": [
+        {
+          "Id": "a63ec7308eb54599b1dafe577b47c444",
+          "Name": "room",
+          "Description": "Revit.Elements.Room",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "98f9101748474a9aaa32ae44dd9993a2",
+          "Name": "value",
+          "Description": "Name\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "691a84dcef3d4e3bb086599caee33e6e",
+          "Name": "void",
+          "Description": "void",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Set name\n\nRoom.SetName (value: string): void"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.Room.Number",
+      "Id": "9b41ea49c717452780554394e576b47d",
+      "Inputs": [
+        {
+          "Id": "b799f1f9ff4e49f3b53274c63efd534e",
+          "Name": "room",
+          "Description": "Revit.Elements.Room",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "d3d024ad7ba14128b5e870208d08ca1f",
+          "Name": "string",
+          "Description": "string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Get room number\n\nRoom.Number: string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.String.TrimWhitespace@string",
+      "Id": "94deb8d4203246479d31d3f3f9cea8f5",
+      "Inputs": [
+        {
+          "Id": "11db22250975410aa8219efceb773754",
+          "Name": "string",
+          "Description": "String to trim.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "deeed9bc83d941209736d034655c5092",
+          "Name": "string",
+          "Description": "String with beginning and ending whitespaces removed.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Removes all whitespace from the start and end of the given string.\n\nString.TrimWhitespace (string: string): string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.String.Replace@string,string,string",
+      "Id": "8d8443da5f30480ea81a41e1ff7734dc",
+      "Inputs": [
+        {
+          "Id": "498f21417c5f499ab09ffefaa342647d",
+          "Name": "string",
+          "Description": "String to replace substrings in.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "58d352e91a5d43598cd33bab82f4c3dd",
+          "Name": "searchFor",
+          "Description": "Text to be replaced.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "8d73af6423fa4f678c65a87032f65d4b",
+          "Name": "replaceWith",
+          "Description": "Text to replace with.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "0b9ff87988674b6fb2091e071cf73539",
+          "Name": "string",
+          "Description": "String with replacements made.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Replaces all occurrences of text in a string with other text.\n\nString.Replace (string: string, searchFor: string, replaceWith: string): string"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "NodeType": "StringInputNode",
+      "InputValue": " ",
+      "Id": "0f428669de70460cbd33eb947913b025",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "b84594e4d70d485eab5e4500df27a8fd",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.TextNote.Text",
+      "Id": "7b9a6b52d1594425b6276c72abd13d35",
+      "Inputs": [
+        {
+          "Id": "3b83c9489d9a4954bbb9de6ee4b43be3",
+          "Name": "textNote",
+          "Description": "Revit.Elements.TextNote",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "25c5ef2fc48442adafc22e3b52a43afb",
+          "Name": "string",
+          "Description": "string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Get Text\n\nTextNote.Text: string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.TextNote.SetText@string",
+      "Id": "fdbe65e8cede4a1c97b6d4a1ceb42e80",
+      "Inputs": [
+        {
+          "Id": "4a9e2d2b940f46799d806de625dd72b4",
+          "Name": "textNote",
+          "Description": "Revit.Elements.TextNote",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "cda59437949449be88eb898d8c9872e3",
+          "Name": "value",
+          "Description": "string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "1aa03f4c501f4f55bf522fc0e8f5133f",
+          "Name": "void",
+          "Description": "void",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Set Text\n\nTextNote.SetText (value: string): void"
+    },
+    {
+      "ConcreteType": "DSRevitNodesUI.Categories, DSRevitNodesUI",
+      "SelectedIndex": 540,
+      "SelectedString": "OST_Sheets",
+      "NodeType": "ExtensionNode",
+      "Id": "8d048e2d017d4850b7de28d260beeb62",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "71780823a5884df58070fa3ef3a51139",
+          "Name": "Category",
+          "Description": "The selected Category.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "All built-in categories."
+    },
+    {
+      "ConcreteType": "DSRevitNodesUI.ElementsOfCategory, DSRevitNodesUI",
+      "NodeType": "ExtensionNode",
+      "Id": "b49417db220f4c0ba480001d6c603cd6",
+      "Inputs": [
+        {
+          "Id": "ee5a5ae730f84c139798292747fdeca8",
+          "Name": "Category",
+          "Description": "The Category",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "3bc5091496d345f1a6558464ec38c650",
+          "Name": "Elements",
+          "Description": "An element class.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Get all elements of the specified category from the model."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.Views.Sheet.SheetName",
+      "Id": "bceb8e81387a4730952eeab0191bdcb1",
+      "Inputs": [
+        {
+          "Id": "67e72bae02d148218372253f075b19ef",
+          "Name": "sheet",
+          "Description": "Revit.Elements.Views.Sheet",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "a2b06ebb589242c2b7703b7cf0e13ab4",
+          "Name": "string",
+          "Description": "string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Get the SheetName of the Sheet\n\nSheet.SheetName: string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.Element.SetParameterByName@string,var",
+      "Id": "5e1eef66462549aca10925c0104c7492",
+      "Inputs": [
+        {
+          "Id": "4ae3a511c4eb431981338a1d4ae5e96e",
+          "Name": "element",
+          "Description": "Revit.Elements.Element",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "c8ef04e802544522bcbcc3aa31cdcb4a",
+          "Name": "parameterName",
+          "Description": "The name of the parameter to set.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "cddd26686d484b118b8cc42e493e002a",
+          "Name": "value",
+          "Description": "The value.\n\nvar",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "b3f2789f0da742b08bd09018b9764a50",
+          "Name": "Element",
+          "Description": "Element",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Set one of the element's parameters.\n\nElement.SetParameterByName (parameterName: string, value: var): Element"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "NodeType": "StringInputNode",
+      "InputValue": "Sheet Name",
+      "Id": "cbe71a32bec64da7a92300acbb71d698",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "9c404430dda442d4824b3a0c82c5c077",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.String.ToLower@string",
+      "Id": "2cf3983512ea4a6ba8bd005989661003",
+      "Inputs": [
+        {
+          "Id": "e991e15ac7074c8899638427dc992e0a",
+          "Name": "string",
+          "Description": "String to be made lowercase\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "bc02e3321a2d418b800e430f54683ac9",
+          "Name": "string",
+          "Description": "Lowercase string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Converts the given string to all lowercase characters.\n\nString.ToLower (string: string): string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.String.ToLower@string",
+      "Id": "b6d35f37fc7b4944b6a2c37772210958",
+      "Inputs": [
+        {
+          "Id": "002a73c8c4f8405cb51b403916300417",
+          "Name": "string",
+          "Description": "String to be made lowercase\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "f6291ebc348644948529290cb3dd7188",
+          "Name": "string",
+          "Description": "Lowercase string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Converts the given string to all lowercase characters.\n\nString.ToLower (string: string): string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.String.ToUpper@string",
+      "Id": "8e99c82dc7514f45bbdf418286bcc950",
+      "Inputs": [
+        {
+          "Id": "8a6f734bbc3042bfb134ac94d6bb238e",
+          "Name": "string",
+          "Description": "String to be made uppercase\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "f42cb8b21c464c73888cbee82a8b36c6",
+          "Name": "string",
+          "Description": "Uppercase string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Converts the given string to all uppercase characters.\n\nString.ToUpper (string: string): string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.String.ToUpper@string",
+      "Id": "8cf346a6807749e2a207ba8725be28b3",
+      "Inputs": [
+        {
+          "Id": "e15f5129568640c18ff71b928b077c26",
+          "Name": "string",
+          "Description": "String to be made uppercase\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "73b46c33c0d04b25892bb6e6eb30db1c",
+          "Name": "string",
+          "Description": "Uppercase string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Converts the given string to all uppercase characters.\n\nString.ToUpper (string: string): string"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.String.ToLower@string",
+      "Id": "b5f475e54916480e9d525327ab919363",
+      "Inputs": [
+        {
+          "Id": "3557685438d5422ea4083a65d72d7222",
+          "Name": "string",
+          "Description": "String to be made lowercase\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "09deeacdf1934f53914b6e4ae040a362",
+          "Name": "string",
+          "Description": "Lowercase string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Converts the given string to all lowercase characters.\n\nString.ToLower (string: string): string"
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "fb2383ded9324321872bec09dc9d9184",
+      "End": "3b83c9489d9a4954bbb9de6ee4b43be3",
+      "Id": "24835961d3bd475c9fa2a757f7f4fc06",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "fb2383ded9324321872bec09dc9d9184",
+      "End": "4a9e2d2b940f46799d806de625dd72b4",
+      "Id": "50ecb1aa7cd04c10ba958077b85ec6ba",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "ec347a037dca4d76aa030aaa4bee375a",
+      "End": "4a67a5e5527f4911b32d577280af06c0",
+      "Id": "6f941702e54341deb1649e387ebc46ca",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "82f6cb293227462a81d8c9c1a4513f42",
+      "End": "88eba2775baa478681fe0c7d080e989a",
+      "Id": "e7306c449bdc4d6c95907ec97cd5cce7",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "151bb012f5ac4ca4a63bc1006a4112c7",
+      "End": "2404aaff57a14ca1ad46eaf22b9b53db",
+      "Id": "51dda20b75234263992c56b943acfd9a",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "151bb012f5ac4ca4a63bc1006a4112c7",
+      "End": "a63ec7308eb54599b1dafe577b47c444",
+      "Id": "c34d3c18b25f4aad9d0582d70803b970",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "151bb012f5ac4ca4a63bc1006a4112c7",
+      "End": "b799f1f9ff4e49f3b53274c63efd534e",
+      "Id": "c1c9a541b4044832bdfcc964f879188e",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "414f29cac3d94e07934f4fc6715e87b0",
+      "End": "498f21417c5f499ab09ffefaa342647d",
+      "Id": "8d1fd3d08db04aaa96bd9034e48a04d2",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "2a535e0fd6d14dd69202934912416991",
+      "End": "98f9101748474a9aaa32ae44dd9993a2",
+      "Id": "ce389fbcf0164c9ba78dc5aeb48371dd",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "d3d024ad7ba14128b5e870208d08ca1f",
+      "End": "58d352e91a5d43598cd33bab82f4c3dd",
+      "Id": "53b97ebbcf9348a2bef775a0e3bc2a18",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "deeed9bc83d941209736d034655c5092",
+      "End": "3d583ae9d2f8419b8ac03beb9a0e4a1e",
+      "Id": "25172881285f4a7f8eedeff49c282d8c",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "0b9ff87988674b6fb2091e071cf73539",
+      "End": "11db22250975410aa8219efceb773754",
+      "Id": "624ea5af902f4959a24f703bf2f71a90",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "b84594e4d70d485eab5e4500df27a8fd",
+      "End": "8d73af6423fa4f678c65a87032f65d4b",
+      "Id": "49e2243091ad4d2c8fdce70cbb57dc1b",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "25c5ef2fc48442adafc22e3b52a43afb",
+      "End": "8a6f734bbc3042bfb134ac94d6bb238e",
+      "Id": "dcb8d31c4cee4c96b7b896c22a7ccb6c",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "71780823a5884df58070fa3ef3a51139",
+      "End": "ee5a5ae730f84c139798292747fdeca8",
+      "Id": "159a428dcb0249d6996b56c1aa4e606d",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "3bc5091496d345f1a6558464ec38c650",
+      "End": "67e72bae02d148218372253f075b19ef",
+      "Id": "36d8db82c6e1458ca062946e9e2fcd66",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "3bc5091496d345f1a6558464ec38c650",
+      "End": "4ae3a511c4eb431981338a1d4ae5e96e",
+      "Id": "5da59bd93e1e4d658933e053366bec7d",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "a2b06ebb589242c2b7703b7cf0e13ab4",
+      "End": "e15f5129568640c18ff71b928b077c26",
+      "Id": "95297ff1e8f24c24b2b343250c605e26",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "9c404430dda442d4824b3a0c82c5c077",
+      "End": "c8ef04e802544522bcbcc3aa31cdcb4a",
+      "Id": "0de51cdeb6884493a7c1ab28a236dc2a",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "f42cb8b21c464c73888cbee82a8b36c6",
+      "End": "cda59437949449be88eb898d8c9872e3",
+      "Id": "6fe6529981d54eca9fecbde1f76ca720",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "73b46c33c0d04b25892bb6e6eb30db1c",
+      "End": "cddd26686d484b118b8cc42e493e002a",
+      "Id": "380ee5a80b59425ba9c69d85a71d82e5",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "Thumbnail": "",
+  "GraphDocumentationURL": "https://archsmarter.com/save-time-revit-dynamo/",
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "2.13",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "2.0",
+      "Data": {}
+    }
+  ],
+  "Author": "ArchSmarter",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": false,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "2.13.1.3887",
+      "RunType": "Manual",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Name": "All Elements of Category",
+        "ShowGeometry": true,
+        "Id": "c0b30113646349e691d3ebf8b5bc5c3e",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 233.85514912676371,
+        "Y": 90.925946970830466
+      },
+      {
+        "Name": "Categories",
+        "ShowGeometry": true,
+        "Id": "a867f3561fac4235813c6b6ebecb1961",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": -94.101472120808083,
+        "Y": 87.004202291491922
+      },
+      {
+        "Name": "Categories",
+        "ShowGeometry": true,
+        "Id": "ec7c977d78b8417f8a5e70cc9d9ed820",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": -98.312559864668287,
+        "Y": 757.38792731140484
+      },
+      {
+        "Name": "All Elements of Category",
+        "ShowGeometry": true,
+        "Id": "a257621cfe7b4956b320c0697bc0d082",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 236.954950967259,
+        "Y": 760.3958107927
+      },
+      {
+        "Name": "Room.Name",
+        "ShowGeometry": true,
+        "Id": "a46359a197ba4ba28e992846f01db4d9",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 901.41504959495376,
+        "Y": 1033.2630099263993
+      },
+      {
+        "Name": "String.ToUpper",
+        "ShowGeometry": true,
+        "Id": "758c9502a1594ddfb5d72b4866512f74",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1985.3047687349142,
+        "Y": 956.6961365529462
+      },
+      {
+        "Name": "Room.SetName",
+        "ShowGeometry": true,
+        "Id": "110911636b5c42959a5899f1c420ec6c",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 2417.1241306019829,
+        "Y": 704.46872802369387
+      },
+      {
+        "Name": "Room.Number",
+        "ShowGeometry": true,
+        "Id": "9b41ea49c717452780554394e576b47d",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 686.99511318157022,
+        "Y": 1210.6330727086465
+      },
+      {
+        "Name": "String.TrimWhitespace",
+        "ShowGeometry": true,
+        "Id": "94deb8d4203246479d31d3f3f9cea8f5",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1679.973063557695,
+        "Y": 1040.1484599270734
+      },
+      {
+        "Name": "String.Replace",
+        "ShowGeometry": true,
+        "Id": "8d8443da5f30480ea81a41e1ff7734dc",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1409.0239491187731,
+        "Y": 1041.5989405651615
+      },
+      {
+        "Name": "String",
+        "ShowGeometry": true,
+        "Id": "0f428669de70460cbd33eb947913b025",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1166.7511724061783,
+        "Y": 1264.2216221782696
+      },
+      {
+        "Name": "TextNote.Text",
+        "ShowGeometry": true,
+        "Id": "7b9a6b52d1594425b6276c72abd13d35",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 542.86080672503374,
+        "Y": 183.24008855315347
+      },
+      {
+        "Name": "TextNote.SetText",
+        "ShowGeometry": true,
+        "Id": "fdbe65e8cede4a1c97b6d4a1ceb42e80",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1899.2390789246494,
+        "Y": 114.62566459035781
+      },
+      {
+        "Name": "Categories",
+        "ShowGeometry": true,
+        "Id": "8d048e2d017d4850b7de28d260beeb62",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": -78.187027138490677,
+        "Y": -402.70562543156484
+      },
+      {
+        "Name": "All Elements of Category",
+        "ShowGeometry": true,
+        "Id": "b49417db220f4c0ba480001d6c603cd6",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 274.443846456283,
+        "Y": -405.180909138537
+      },
+      {
+        "Name": "Sheet.SheetName",
+        "ShowGeometry": true,
+        "Id": "bceb8e81387a4730952eeab0191bdcb1",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 547.093826923652,
+        "Y": -314.825407491194
+      },
+      {
+        "Name": "Element.SetParameterByName",
+        "ShowGeometry": true,
+        "Id": "5e1eef66462549aca10925c0104c7492",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1971.3421689213551,
+        "Y": -695.78973511853883
+      },
+      {
+        "Name": "String",
+        "ShowGeometry": true,
+        "Id": "cbe71a32bec64da7a92300acbb71d698",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1633.0516140182051,
+        "Y": -584.12041465095785
+      },
+      {
+        "Name": "String.ToLower",
+        "ShowGeometry": true,
+        "Id": "2cf3983512ea4a6ba8bd005989661003",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1975.9939706840714,
+        "Y": 1145.4492546075764
+      },
+      {
+        "Name": "String.ToLower",
+        "ShowGeometry": true,
+        "Id": "b6d35f37fc7b4944b6a2c37772210958",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1222.2639750004234,
+        "Y": 452.76291101468809
+      },
+      {
+        "Name": "String.ToUpper",
+        "ShowGeometry": true,
+        "Id": "8e99c82dc7514f45bbdf418286bcc950",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1293.60847867829,
+        "Y": 299.885394628397
+      },
+      {
+        "Name": "String.ToUpper",
+        "ShowGeometry": true,
+        "Id": "8cf346a6807749e2a207ba8725be28b3",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1218.9869078762363,
+        "Y": -306.62699030010089
+      },
+      {
+        "Name": "String.ToLower",
+        "ShowGeometry": true,
+        "Id": "b5f475e54916480e9d525327ab919363",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1163.48530814731,
+        "Y": -145.21265288514155
+      }
+    ],
+    "Annotations": [
+      {
+        "Id": "1eae09c8686549a9888afd1b0d255170",
+        "Title": "Get Rooms",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "ec7c977d78b8417f8a5e70cc9d9ed820",
+          "a257621cfe7b4956b320c0697bc0d082"
+        ],
+        "HasNestedGroups": false,
+        "Left": -108.31255986466829,
+        "Top": 691.38792731140484,
+        "Width": 612.41036797478444,
+        "Height": 201.72216919558082,
+        "FontSize": 30.0,
+        "InitialTop": 757.38792731140484,
+        "InitialHeight": 148.00788348129515,
+        "TextblockHeight": 56.0,
+        "Background": "#FFD4B6DB"
+      },
+      {
+        "Id": "dbf2ed0744344eb6ac7089c11d05e165",
+        "Title": "Get Room Names and Room Numbers",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "a46359a197ba4ba28e992846f01db4d9",
+          "9b41ea49c717452780554394e576b47d"
+        ],
+        "HasNestedGroups": false,
+        "Left": 676.99511318157022,
+        "Top": 930.69158135497071,
+        "Width": 425.27707927052631,
+        "Height": 412.65577706796159,
+        "FontSize": 30.0,
+        "InitialTop": 1033.2630099263993,
+        "InitialHeight": 322.37006278224726,
+        "TextblockHeight": 92.571428571428584,
+        "Background": "#FFBB87C6"
+      },
+      {
+        "Id": "64d6c8c230604a479dd0674ccbb46ad0",
+        "Title": "Replace Room Number and set to Upper (or Lower)",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "758c9502a1594ddfb5d72b4866512f74",
+          "94deb8d4203246479d31d3f3f9cea8f5",
+          "8d8443da5f30480ea81a41e1ff7734dc",
+          "0f428669de70460cbd33eb947913b025",
+          "2cf3983512ea4a6ba8bd005989661003"
+        ],
+        "HasNestedGroups": false,
+        "Left": 1156.7511724061783,
+        "Top": 890.6961365529462,
+        "Width": 1033.9821677573073,
+        "Height": 506.23977133960921,
+        "FontSize": 30.0,
+        "InitialTop": 956.6961365529462,
+        "InitialHeight": 452.52548562532343,
+        "TextblockHeight": 56.0,
+        "Background": "#FFFFC999"
+      },
+      {
+        "Id": "56e6a55f9f074f7eba818dbfe11724bc",
+        "Title": "Get Text Notes",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "c0b30113646349e691d3ebf8b5bc5c3e",
+          "a867f3561fac4235813c6b6ebecb1961",
+          "7b9a6b52d1594425b6276c72abd13d35"
+        ],
+        "HasNestedGroups": false,
+        "Left": -104.10147212080808,
+        "Top": 21.004202291491922,
+        "Width": 868.39085027441331,
+        "Height": 294.95017197594723,
+        "FontSize": 30.0,
+        "InitialTop": 87.004202291491922,
+        "InitialHeight": 241.23588626166151,
+        "TextblockHeight": 56.0,
+        "Background": "#FFD4B6DB"
+      },
+      {
+        "Id": "8c425ddb3e3144b8b70f52d310b0cf5d",
+        "Title": "Update Room Name",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "110911636b5c42959a5899f1c420ec6c"
+        ],
+        "HasNestedGroups": false,
+        "Left": 2407.1241306019829,
+        "Top": 593.89729945226532,
+        "Width": 208.0,
+        "Height": 273.0,
+        "FontSize": 30.0,
+        "InitialTop": 704.46872802369387,
+        "InitialHeight": 145.0,
+        "TextblockHeight": 100.57142857142858,
+        "Background": "#FFA4E1FF"
+      },
+      {
+        "Id": "efbeb6e8905347d48b9ca6d4d73198f5",
+        "Title": "Get Sheets and Sheet Names",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "8d048e2d017d4850b7de28d260beeb62",
+          "b49417db220f4c0ba480001d6c603cd6",
+          "bceb8e81387a4730952eeab0191bdcb1"
+        ],
+        "HasNestedGroups": false,
+        "Left": -88.187027138490677,
+        "Top": -471.180909138537,
+        "Width": 852.13799691928557,
+        "Height": 289.0697873616287,
+        "FontSize": 30.0,
+        "InitialTop": -405.180909138537,
+        "InitialHeight": 235.35550164734298,
+        "TextblockHeight": 56.0,
+        "Background": "#FFD4B6DB"
+      },
+      {
+        "Id": "67081c152464435293e985a0fa132f3d",
+        "Title": "Update Sheet Name Parameter",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "5e1eef66462549aca10925c0104c7492",
+          "cbe71a32bec64da7a92300acbb71d698"
+        ],
+        "HasNestedGroups": false,
+        "Left": 1623.0516140182051,
+        "Top": -761.78973511853883,
+        "Width": 661.71912633172155,
+        "Height": 310.3836061818667,
+        "FontSize": 30.0,
+        "InitialTop": -695.78973511853883,
+        "InitialHeight": 256.669320467581,
+        "TextblockHeight": 56.0,
+        "Background": "#FFA4E1FF"
+      },
+      {
+        "Id": "e529de4a91ba489e81e0af9af84c3539",
+        "Title": "Update Text",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "fdbe65e8cede4a1c97b6d4a1ceb42e80"
+        ],
+        "HasNestedGroups": false,
+        "Left": 1889.2390789246494,
+        "Top": 40.625664590357815,
+        "Width": 222.28571428571445,
+        "Height": 236.42857142857144,
+        "FontSize": 30.0,
+        "InitialTop": 114.62566459035781,
+        "InitialHeight": 145.0,
+        "TextblockHeight": 64.0,
+        "Background": "#FFA4E1FF"
+      },
+      {
+        "Id": "306426847f984814a7aa9cebe37ca3ab",
+        "Title": "Change Text Case",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "8e99c82dc7514f45bbdf418286bcc950",
+          "b6d35f37fc7b4944b6a2c37772210958"
+        ],
+        "HasNestedGroups": false,
+        "Left": 1212.2639750004234,
+        "Top": 225.88539462839702,
+        "Width": 286.773075106438,
+        "Height": 359.59180210057679,
+        "FontSize": 30.0,
+        "InitialTop": 299.885394628397,
+        "InitialHeight": 297.87751638629112,
+        "TextblockHeight": 64.0,
+        "Background": "#FFBB87C6"
+      },
+      {
+        "Id": "74d6712601674dbc9e8d9d7b571dc80c",
+        "Title": "Change Text Case",
+        "DescriptionText": "<Double click here to edit group description>",
+        "IsExpanded": true,
+        "WidthAdjustment": 0.0,
+        "HeightAdjustment": 0.0,
+        "Nodes": [
+          "8cf346a6807749e2a207ba8725be28b3",
+          "b5f475e54916480e9d525327ab919363"
+        ],
+        "HasNestedGroups": false,
+        "Left": 1153.48530814731,
+        "Top": -380.62699030010089,
+        "Width": 270.93017115749763,
+        "Height": 368.12862312924506,
+        "FontSize": 30.0,
+        "InitialTop": -306.62699030010089,
+        "InitialHeight": 306.41433741495933,
+        "TextblockHeight": 64.0,
+        "Background": "#FFBB87C6"
+      }
+    ],
+    "X": 75.116745625676884,
+    "Y": 296.94757283702745,
+    "Zoom": 0.38366126914986565
+  }
+}
